@@ -22,6 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +45,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            previewCards()
+            MaterialTheme {
+                preview()
+            }
         }
     }
 }
@@ -50,41 +56,29 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun preview() {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize(1f)
     ) {
-        listViewItem(R.drawable.ic_launcher_foreground, "John Doe", "Software Developer")
-        listViewItem(R.drawable.ic_launcher_foreground, "Rohit Kumar", "Manager")
-        listViewItem(R.drawable.ic_launcher_foreground, "Mathew Wood", "Java Developer")
-        listViewItem(R.drawable.ic_launcher_foreground, "Karl Marx", "Python Developer")
+        notificationCounter()
     }
 }
 
 @Composable
-fun listViewItem(imgId: Int, name: String, occupation: String) {
-    Row(Modifier.padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(imgId),
-            contentDescription = null,
-            modifier = Modifier.size(60.dp)
-                .border(2.dp,Color.Gray, CircleShape)
-                .padding(5.dp)
-        )
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            Text(
-                text = name,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(5.dp)
-            )
-            Text(
-                text = occupation,
-                fontWeight = FontWeight.Thin,
-                fontSize = 12.sp,
-                modifier = Modifier.padding(5.dp,0.dp)
-            )
+fun notificationCounter() {
+    var count : MutableState<Int> = rememberSaveable() { mutableStateOf(0) }
+    Column(
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = " You have sent ${count.value} notification")
+        Button(
+            onClick = {
+                count.value++
+            }
+        ){
+            Text(text = "Send Notification")
         }
+
     }
 }
 
